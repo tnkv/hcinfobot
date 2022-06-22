@@ -1,0 +1,2 @@
+aiohttp==3.8.1
+vkbottle==4.3.4
