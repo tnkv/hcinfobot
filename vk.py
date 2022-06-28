@@ -7,12 +7,12 @@ vkbot = config.vkbot() # токен
 api_link = config.apilink() # ссылка на апи
  
 @vkbot.on.message(text=["/info <name>", "/info"]) # получаю сообщения с командой /info
-async def handler(mes: Message, name: Optional[str] = None) -> str:
+async def playerinfo(mes: Message, name: Optional[str] = None) -> str:
     await mes.answer(await commands.pinfo(name)) # добавляю часть к мессагу если игрок участник команды
 
 
 @vkbot.on.message(text=["/sinfo"])
-async def handler(mes: Message) -> str:
+async def serverinfo(mes: Message) -> str:
     await mes.answer(await commands.sinfo())
 
 vkbot.run_forever() # запускаю вк бота

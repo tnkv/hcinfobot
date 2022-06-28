@@ -63,6 +63,8 @@ async def sinfo() -> str:
     answer = await serverinfo() # вызываю функцию получения json'а с инфой о сервере
     weather = await getweather(answer) # обработка погоды
     uptime = formattime(answer["uptime_seconds"])
+    uptime = uptime.replace('days', 'дней')
+    uptime = uptime.replace('day', 'день')
     tps = 20 if answer["tps" ] >= 20 else answer["tps"] # делаю простую проверку на тпс > 20, ибо сервер в случае нестандартного тпс позже нагоняет для того чтобы все работало +- как и должно,
          
     return f'🚀 ТПС: {tps}\n{weather}\n⏰ Аптайм: {uptime}\n🤵 Онлайн: {answer["online"]}\nИгроки онлайн:\n{answer["players"]}'
