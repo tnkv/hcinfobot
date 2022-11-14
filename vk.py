@@ -2,7 +2,9 @@ from typing import Optional
 from vkbottle.bot import Bot, Message
 import config
 import commands
+import logging
 
+logging.getLogger("vkbottle").setLevel(logging.INFO)
 vkbot = config.vkbot() # токен
 api_link = config.apilink() # ссылка на апи
  
