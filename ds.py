@@ -27,4 +27,4 @@ class DSbot(discord.Client):
 intents = discord.Intents.default()
 intents.message_content = True
 client = DSbot(intents=intents)
-client.run(config.dstoken()) # запускаю дс бота
+client.run(config.dstoken) # запускаю дс бота
