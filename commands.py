@@ -49,22 +49,23 @@ async def pinfo(name: Optional[str] = None) -> str:
         # необходимости написать ник для получения информации
 
     answer = await playerinfo(name)  # вызываю функцию получения json'а с инфой об игроке
-
-    wt = answer["player"]["online"]["whitelistTime"]
-    if wt == 0:
-        wt = "👹 Данный игрок не в вайтлисте"  #
     try:
         locale.setlocale(locale.LC_ALL, 'ru_RU.UTF-8')
     except:
         pass
+    wt = answer["player"]["online"]["whitelistTime"]
+    if wt == 0 and answer["player"]["online"]["last"] != 0:
+        wt = "Игрок не в вайтлисте"  #
+    elif answer["player"]["online"]["last"] == 0:
+        return "👹 Данный игрок не в вайтлисте"
     else:
         wt = datetime.utcfromtimestamp(wt + 10800).strftime('%d %b. %Y г., %H:%M')
     ts = datetime.utcfromtimestamp(answer["player"]["online"]["last"] + 10800).strftime('%d %b. %Y г., %H:%M')
     # конверчу Unix-Time в читаемый + добавляю 3 часа чтобы бот отвечал в таймзоне МСК
-    playtime = formattime(answer["player"]["playtime"])
+    playtime = formattime(answer["player"]["playtime"]).replace('days', 'дней').replace('day', 'день')
 
-    msg = f'Информация об игроке:\n\n👨‍💻 Ник: {answer["player"]["name"]}\n⏳ Даты:\nДобавлен: {wt}\nПоследний раз в ' \
-          f'сети: {ts}\nПроведено в игре: {playtime}'  # создаю мессаг
+    msg = f'Информация об игроке:\n\n👨‍💻 Ник: {answer["player"]["name"]}\n\n⏳ Даты:\nДобавлен: {wt}\nПоследний раз в ' \
+          f'сети: {ts}\nПроведено в игре: {playtime}\n\n🌚 Статистика:\nСмерти: {answer["player"]["deaths"]}\nМобов убито: {answer["player"]["mob_kills"]}\nИгроков убито: {answer["player"]["player_kills"]}'  # создаю мессаг
     if answer["player"]["team"]["name"] == "-":
         return msg
 
