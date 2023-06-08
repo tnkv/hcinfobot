@@ -1,30 +1,20 @@
 import discord
-import config
+from discord.commands import Option
+
 import commands
+import config
 
-class DSbot(discord.Client):
-    async def on_ready(self):
-        print('Logged on as', self.user)
+bot = discord.Bot()
 
-    async def on_message(self, message):
-        # don't respond to ourselve
-        if message.author == self.user:
-            return
 
-        if message.content == '/sinfo':
-            sinfo = await commands.sinfo()
-            sinfo = sinfo.replace("_", "\_")
-            await message.channel.send(sinfo)
-        if "/info" in message.content and not "/sinfo" in message.content:
-            msg = message.content.split(" ")
-            if len(msg) == 2:
-                print(msg[1])
-                pinfo = await commands.pinfo(msg[1])
-            else:
-                pinfo = await commands.pinfo()
-            await message.channel.send(pinfo)
-            
-intents = discord.Intents.default()
-intents.message_content = True
-client = DSbot(intents=intents)
-client.run(config.dstoken) # запускаю дс бота
+@bot.slash_command(name="sinfo", description='Отправить информацию о сервере.', guild_ids=config.guild_ids)
+async def first_slash(ctx):
+    await ctx.respond((await commands.sinfo()).replace("_", "\_"))
+
+
+@bot.slash_command(name="info", description='Отправить информацию об игроке.', guild_ids=config.guild_ids)
+async def first_slash(ctx, nickname: Option(str, "Введите никнейм", required=True, default='')):
+    await ctx.respond(await commands.pinfo(nickname))
+
+
+bot.run(config.dstoken)
